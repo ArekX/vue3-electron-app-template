@@ -1,9 +1,10 @@
 {
-  "name": "sql-tool",
-  "version": "0.1.0",
+  "name": "vue3-electron-app",
+  "version": "1.0.0",
   "private": true,
-  "author": "Aleksandar Panic",
-  "description": "SQL deployment tool",
+  "author": "",
+  "description": "Vue 3 electron app",
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "serve": "vue-cli-service serve --development",
