@@ -1,12 +1,16 @@
 # vue3-electron-app-template
 
-Using Electron 12+ with electron-forge and pure Vue 3.
+Using Electron 12+ with electron-forge and pure Vue 3 (no vuex or any addtional libs installed).
 
 Vue 3 Electron App Template
 
 Everything in `electron` folder is code for Electron JS code. Everything in `src` is Vue code.
 
 Images and other assets must be inside `assets` folder and referenced using `/path/to/image.jpg`.
+
+Watching and rebuild script was done using pure vue.config.js changes with webpack hooks and 
+without having to override any part of vue cli service or electron's code.
+So this should be compatible with vue 3 or electron upgrades.
 
 ## Installation
 
