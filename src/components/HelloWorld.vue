@@ -1,8 +1,9 @@
 <template>
   <div class="hello">
+    <div><img src="assets/logo.png"></div>
     Hello world from Vue 3.
 
-    <p>This app will re-run if anything watched inside src or electron folder changes.</p>
+    <p>This app will hot reload if anything changes inside src and will re-run if anything in changes in electron folder.</p>
   </div>
 </template>
 

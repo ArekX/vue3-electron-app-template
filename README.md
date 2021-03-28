@@ -26,6 +26,23 @@ Electron app will reload if code changes in `src` or `electron` folder.
 
 1. Run `npm run build`
 
+## Development
+
+### Consderations
+
+1. Keep all app state inside vue. Use node features only through electron ipcRenderer and ipcMain. This will allow for Vue side with hot reload to function correctly and electron side to function as expected.
+2. You want to watch for files or folders outside `electron` folder you will need to add them into `"watch"` inside
+`"electronPlugin"` inside `package.json`.
+3. If you need to ignore files from electron watch please add them in `"ignore"` in `"electronPlugin"`.
+
+
+### Interop
+
+In order to expose functions for Vue to talk to electron's process you will need to add a file inside `interop` folder and add it in `index.js` with a name you want. Currently there is `dialog.js` which is exposed as `window.Interop.dialog` in Vue.
+
+Inside Vue you only need to call `window.Interop.nameExposedInIndexJs.function()`. All functions return promises so you can use async/await to handle that.
+
+This code is all inside `electron` folder so if your workflow differs then you can just use your own workflow with your own custom electron code.
 
 ## License
 

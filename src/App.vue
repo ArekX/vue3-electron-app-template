@@ -5,7 +5,9 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/HelloWorld.vue';
+
+const Interop = window.Interop;
 
 export default {
   name: 'App',
@@ -18,8 +20,8 @@ export default {
      }
   },
   methods: {
-    run() {
-        window.MainApp.openDialog().then(r => this.result = r);
+    async run() {
+        this.result = await Interop.dialog.openDialog();
     }
   }
 }

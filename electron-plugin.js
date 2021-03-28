@@ -1,10 +1,13 @@
 const electron = require('electron');
 const child_process = require('child_process');
+const chokidar = require('chokidar');
+
+const config = require("./package.json");
+
 const fs = require('fs');
 const path = require('path');
-const isDev = process.argv[3] === '--development';
-
-const electronIndex = path.join(__dirname, 'index.js');
+let reloading = false;
+let child = null;
 
 module.exports = {
   apply(compiler) {
@@ -20,44 +23,53 @@ module.exports = {
   }
 };
 
+function reloadElectron() {
+    if (child) {
+        reloading = true;
+        child.kill('SIGKILL');
+    }
+
+    child = child_process.spawn(electron, ['./electron/index.js', '--development'], { stdio: 'inherit' });
+    child.on('close', code => {
+        if (!reloading) {
+            process.exit(code);
+        }
+        reloading = false;
+    });
+}
+
 
 function hookOnServeMode(compiler) {
-    let reloading = false;
-    let child = null;
-
-
-    compiler.hooks.compilation.tap('ElectronPlugin', (compilation) => {
-        compilation.hooks.additionalAssets.tap('ElectronPlugin', () => {
-            delete compilation.assets['js/electron.js'];
-        });
-    });
-
-
-    compiler.hooks.emit.tap('ElectronPlugin', (compilation) => {
-        delete compilation.assets['js/electron.js'];
-    });
-
+    let ready = false;
     compiler.hooks.done.tap('ElectronPlugin', () => {
-        if (child) {
-            reloading = true;
-            child.kill('SIGKILL');
+        if (!ready) {
+            reloadElectron();
+            ready = true;
         }
+    });
 
-        child = child_process.spawn(electron, ['./electron/index.js', '--development'], { stdio: 'inherit' });
-        child.on('close', code => {
-            if (!reloading) {
-                process.exit(code);
-            }
-            reloading = false;
-        });
+    const ignoreFiles = config.electronPlugin.ignore || [];
+
+    chokidar.watch(config.electronPlugin.watch).on('all', (event, fullPath) => {
+        if (ignoreFiles.includes(path.basename(fullPath))) {
+            return;
+        }
+        
+        console.log("[ElectronPlugin] Reloading due to change in:", fullPath);
+        ready && reloadElectron();
     });
 }
 
 function hookOnBuildMode(compiler) {
     compiler.hooks.done.tap('ElectronPlugin', () => {
         const htmlPath = path.join(__dirname, 'dist/index.html');
-        const source = fs.readFileSync(htmlPath).toString();
+        const cssPath = path.join(__dirname, 'dist/css/app.css');
 
-        fs.writeFileSync(htmlPath, source.replace(/(src|href)="\//g, '$1="'));
+
+        console.log('[ElectronPlugin] Rewriting asset paths on index.html')
+        fs.writeFileSync(htmlPath, fs.readFileSync(htmlPath).toString().replace(/(src|href)="\//g, '$1="'));
+
+        console.log('[ElectronPlugin] Rewriting asset paths on app.css')
+        fs.writeFileSync(cssPath, fs.readFileSync(cssPath).toString().replace(/url\(\//g, 'url(..\/'));
     });
 }

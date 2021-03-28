@@ -1,14 +1,20 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
-require('./dialog-ipc-main.js');
+const interops = require('./interop');
+
+for (const [interopName, interop] of Object.entries(interops)) {
+  for (const [name, handler] of Object.entries(interop)) {
+    ipcMain.handle(interopName + '.' + name, handler);
+  }
+}
 
 function createWindow () {
   const win = new BrowserWindow({
     width: 1024,
     height: 768,
     webPreferences: {
-      preload: path.join(__dirname, 'integrate.js')
+      preload: path.join(__dirname, 'preload.js')
     }
 
   });
@@ -16,6 +22,7 @@ function createWindow () {
   const development = process.argv?.[2] === '--development';
 
   if (development) {
+     win.webContents.openDevTools();
      win.loadURL('http://localhost:8080');
   } else {
      win.loadFile('dist/index.html');
