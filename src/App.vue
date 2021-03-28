@@ -1,29 +1,22 @@
 <template>
-  <HelloWorld/>
-  <button @click="run">Test File Open Dialog</button>
-  <div v-if="result">{{result}}</div>
+  <component :is="navigation.currentPage" />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
-
-const Interop = window.Interop;
+import pages from './pages';
+import navigation from './state/navigation';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ...pages
   },
   data() {
      return {
-        result: null
+        navigation
      }
   },
-  methods: {
-    async run() {
-        this.result = await Interop.dialog.openDialog();
-    }
-  }
+  methods: {},
 }
 </script>
 
