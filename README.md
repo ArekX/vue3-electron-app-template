@@ -29,7 +29,7 @@ Electron app will reload if code changes in `src` or `electron` folder.
 ### Consderations
 
 1. Keep all app state inside vue. Use node features only through electron ipcRenderer and ipcMain. This will allow for Vue side with hot reload to function correctly and electron side to function as expected.
-2. You want to watch for files or folders outside `electron` folder you will need to add them into `"watch"` inside
+2. If you need to watch for files or folders outside `electron` folder you will need to add them into `"watch"` inside
 `"electronPlugin"` inside `package.json`.
 3. If you need to ignore files from electron watch please add them in `"ignore"` in `"electronPlugin"`.
 4. In case some node modules do not copy correctly during building for production, reason can be due to `electron-packager` pruning too many files and not recongnizing that some files or node modules are necessary. In order to mitigate this you can add node modules you want to do a full copy (no pruning at all) by specifying their folder names in `"fullCopyModules"` in `"electronPlugin"`.
