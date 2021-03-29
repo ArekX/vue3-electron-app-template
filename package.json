@@ -44,7 +44,8 @@
   },
   "electronPlugin": {
     "watch": ["electron"],
-    "ignore": []
+    "ignore": [],
+    "fullCopyModules": []
   },
   "eslintConfig": {
     "root": true,
@@ -66,40 +67,6 @@
     "not dead"
   ],
   "config": {
-    "forge": {
-      "packagerConfig": {
-        "ignore": [
-          "src",
-          "public",
-          "node_modules",
-          "babel.config.js",
-          "dependencies.js",
-          "electron-plugin.js",
-          "vue.config.js"
-        ]
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "sql_tool"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+    "forge": "forge.config.js"
   }
 }

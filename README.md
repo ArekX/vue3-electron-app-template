@@ -6,8 +6,6 @@ Vue 3 Electron App Template
 
 Everything in `electron` folder is code for Electron JS code. Everything in `src` is Vue code.
 
-Images and other assets must be inside `assets` folder and referenced using `/path/to/image.jpg`.
-
 Watching and rebuild script was done using pure vue.config.js changes with webpack hooks and 
 without having to override any part of vue cli service or electron's code.
 So this should be compatible with vue 3 or electron upgrades.
@@ -34,7 +32,9 @@ Electron app will reload if code changes in `src` or `electron` folder.
 2. You want to watch for files or folders outside `electron` folder you will need to add them into `"watch"` inside
 `"electronPlugin"` inside `package.json`.
 3. If you need to ignore files from electron watch please add them in `"ignore"` in `"electronPlugin"`.
-
+4. In case some node modules do not copy correctly during building for production, reason can be due to `electron-packager` pruning too many files and not recongnizing that some files or node modules are necessary. In order to mitigate this you can add node modules you want to do a full copy (no pruning at all) by specifying their folder names in `"fullCopyModules"` in `"electronPlugin"`.
+5. Electron forge build configuration is located inside `forge.config.js`.
+6. Assets should not start with `/`. This will work fine in `npm run serve` because it runs a webpack server in background but it won't work in `npm run build`.
 
 ### Interop
 

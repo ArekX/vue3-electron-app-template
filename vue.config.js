@@ -1,4 +1,5 @@
 const ElectronPlugin = require('./electron-plugin');
+
 const path = require('path');
 
 const entry = {
@@ -7,6 +8,8 @@ const entry = {
 
 module.exports = {
   filenameHashing: false,
+  publicPath: '.',
+  chainWebpack: config => config.optimization.delete('splitChunks'),
   configureWebpack: {
     plugins: [ElectronPlugin],
     entry
